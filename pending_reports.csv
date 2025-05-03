@@ -1,0 +1,7 @@
+token,sketch_filename,first_name,last_name,age,crime,arrested,proof_filename,status,submitted_by
+13614C18,20250502093947_2.jpg,Manoj,Dubey,53,Muder Kidnapping,Murder,20250502093947_Kaggle_Photo.png,approved,adii
+D96B0FDA,20250502105247_79.jpg,Ayub,Khan,32,Murder,Murder,20250502105247_Screenshot_from_2024-04-08_13-45-02.png,approved,adii
+FA99A18C,20250502173220_127.jpg,Lucy,Henry,43,"Gold robbery, cyber fraud",London,,approved,Rutuja
+5F4C914A,20250502221659_108.jpg,Robin,pelyy,23,Murder,London,,approved,Rutuja
+A85B2A04,20250503110656_Sahil_meerut.jpg,Sahil,Meerut,25,Murder,Delhi,,approved,adii
+81F7AFCF,20250503150504_muskan_meerut.jpg,Manoj,Dubey,32,Gold snatching,Pune,20250503150504_kaggle_sketches.png,approved,adii

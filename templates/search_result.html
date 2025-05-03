@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Result | Criminal Identification System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+    <style>
+        /* Reset and base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        /* Header styles */
+        .dashboard-header {
+            background: linear-gradient(135deg, #3a6ea5, #004e98);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0.6;
+        }
+
+        .dashboard-header h1 {
+            margin-bottom: 15px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .tagline {
+            font-style: italic;
+            color: #ecf0f1;
+            font-size: 1.2rem;
+            position: relative;
+            opacity: 0.9;
+        }
+
+        /* Main container */
+        .main-container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Card styling */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+            border-top: 5px solid #3a6ea5;
+            position: relative;
+        }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #3a6ea5, #004e98, #ff9505);
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .card h2 {
+            color: #3a6ea5;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .card h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #3a6ea5, #004e98);
+            border-radius: 3px;
+        }
+
+        /* Results container */
+        .results-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            min-width: 800px;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            word-break: break-word;
+        }
+
+        th {
+            background: linear-gradient(135deg, #3a6ea5, #004e98);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e8f4fc;
+            transition: background-color 0.3s ease;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Column sizing */
+        td:first-child {
+            width: 120px;
+            min-width: 120px;
+        }
+
+        td:nth-child(2) {
+            width: 200px;
+            min-width: 200px;
+        }
+
+        td:nth-child(3), td:nth-child(4) {
+            width: 100px;
+            min-width: 100px;
+        }
+
+        td:nth-child(5) {
+            width: 250px;
+            min-width: 250px;
+        }
+
+        /* Image styling */
+        .sketch-thumbnail {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            background-color: #f8f9fa;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .sketch-thumbnail:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 50px 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .no-results p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .no-results p::before,
+        .no-results p::after {
+            content: "—";
+            color: #ccc;
+            margin: 0 10px;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #3a6ea5, #004e98);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .back-link:hover {
+            background: linear-gradient(135deg, #004e98, #3a6ea5);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .back-link::before {
+            content: "←";
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        /* Search info styling */
+        .search-info {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            border-left: 4px solid #3a6ea5;
+        }
+
+        .search-info p {
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .search-term {
+            font-weight: bold;
+            color: #004e98;
+            background-color: rgba(58, 110, 165, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* Back links container */
+        .no-results {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .no-results .back-link {
+            margin-top: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-container {
+                width: 100%;
+                padding: 0 10px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+
+            .sketch-thumbnail {
+                width: 80px;
+                height: 80px;
+            }
+
+            .search-info p {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <h1>Criminal Identification System</h1>
+        <p class="tagline">"Stay aware, stay prepared — vigilance today can prevent tragedy tomorrow."</p>
+    </header>
+
+    <div class="main-container">
+        <div class="card">
+            <h2>Search Results</h2>
+
+            {% if search_type and search_term %}
+            <div class="search-info">
+                <p>
+                    {% if search_type == 'id' %}
+                        Showing results for ID: <span class="search-term">{{ search_term }}</span>
+                    {% elif search_type == 'name' %}
+                        Showing results for Name: <span class="search-term">{{ search_term }}</span>
+                    {% elif search_type == 'crime' %}
+                        Showing results for Crime: <span class="search-term">{{ search_term }}</span>
+                    {% else %}
+                        Showing results for: <span class="search-term">{{ search_term }}</span>
+                    {% endif %}
+                </p>
+            </div>
+            {% endif %}
+
+            <div class="results-container">
+                {% if results.empty %}
+                    <div class="no-results">
+                        <p>No matching records found</p>
+                        <a href="{{ url_for('search_criminal') }}" class="back-link">Try Another Search</a>
+                        <a href="{{ url_for('user_dashboard') }}" class="back-link">Back to Dashboard</a>
+                    </div>
+                {% else %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Crimes</th>
+                                <th>Area of Crime</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for index, row in results.iterrows() %}
+                                <tr>
+                                    <td>{{ row['id'] }}</td>
+                                    <td>
+                                        <img src="{{ url_for('serve_view_record', filename=row['sketch_filename']) }}"
+                                             alt="Criminal sketch"
+                                             class="sketch-thumbnail">
+                                    </td>
+                                    <td>{{ row['name'] if row['name'] and row['name'] != 'nan' else 'N/A' }}</td>
+                                    <td>{{ row['gender'] if row['gender'] and row['gender'] != 'nan' else 'N/A' }}</td>
+                                    <td>{{ row['age']|int }}</td>
+                                    <td>{{ row['crimes'] if row['crimes'] and row['crimes'] != 'nan' else 'N/A' }}</td>
+                                    <td>{{ row['area_of_crime'] if row['area_of_crime'] and row['area_of_crime'] != 'nan' else 'N/A' }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="{{ url_for('user_dashboard') }}" class="back-link">Back to Dashboard</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sketch to Criminal Matching</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --warning-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            --info-gradient: linear-gradient(135deg, #0acffe 0%, #495aff 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+            --light-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+
+            --primary-color: #4a6cf7;
+            --secondary-color: #f5576c;
+            --success-color: #43e97b;
+            --danger-color: #fa709a;
+            --warning-color: #f6d365;
+            --info-color: #0acffe;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.1);
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 24px;
+
+            --transition-fast: all 0.2s ease;
+            --transition-normal: all 0.3s ease;
+            --transition-slow: all 0.5s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            color: var(--dark-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .upload-label {
+            display: inline-block;
+            padding: 12px 25px;
+            background: var(--info-gradient);
+            color: white;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            margin-bottom: 25px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .upload-label:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .upload-label i {
+            margin-right: 8px;
+        }
+
+        .btn {
+            background: var(--success-gradient);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 25px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .preview {
+            display: none;
+            margin: 25px auto 0;
+            max-width: 100%;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+            border: 3px solid white;
+            transition: var(--transition-normal);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition-fast);
+        }
+
+        .back-link:hover {
+            color: var(--secondary-color);
+        }
+
+        .back-link i {
+            margin-right: 5px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary-gradient);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            animation: progress-animation 2s infinite ease-in-out;
+        }
+
+        @keyframes progress-animation {
+            0% {
+                width: 10%;
+            }
+            50% {
+                width: 80%;
+            }
+            100% {
+                width: 10%;
+            }
+        }
+
+        #progressText {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Sketch for Criminal Matching</h1>
+
+        <form method="POST" enctype="multipart/form-data" onsubmit="return startMatching()">
+            <label for="fileUpload" class="upload-label"><i class="fas fa-file-image"></i> Choose Sketch</label>
+            <input type="file" name="sketch" id="fileUpload" accept="image/*" onchange="previewImage(event)" required>
+            <img id="imagePreview" class="preview" alt="Sketch Preview">
+            <br>
+            <button type="submit" id="submitBtn" class="btn"><i class="fas fa-search"></i> Upload and Match</button>
+
+            <div id="progressContainer" style="display: none; margin-top: 20px;">
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <p id="progressText">Processing sketch and matching with criminals...</p>
+            </div>
+        </form>
+
+        <a href="{{ url_for('user_dashboard') }}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('imagePreview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function validateForm() {
+            const fileInput = document.getElementById('fileUpload');
+            if (!fileInput.files.length) {
+                alert("Please upload a sketch before submitting.");
+                return false;
+            }
+            return true;
+        }
+
+        function startMatching() {
+            if (!validateForm()) {
+                return false;
+            }
+
+            // Show progress indicator
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            // Update progress text with stages
+            const progressStages = [
+                "Uploading sketch...",
+                "Processing image...",
+                "Extracting facial features...",
+                "Comparing with criminal database...",
+                "Finding best matches...",
+                "Preparing results..."
+            ];
+
+            let currentStage = 0;
+            const progressText = document.getElementById('progressText');
+
+            // Simulate progress through different stages
+            const progressInterval = setInterval(() => {
+                if (currentStage < progressStages.length) {
+                    progressText.textContent = progressStages[currentStage];
+                    currentStage++;
+                } else {
+                    clearInterval(progressInterval);
+                }
+            }, 1500);
+
+            return true;
+        }
+    </script>
+</body>
+</html>

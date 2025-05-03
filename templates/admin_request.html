@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Criminal Requests</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    .option-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .option-card img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .option-card h3 {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .option-card p {
+      margin: 5px 0;
+      font-size: 1rem;
+    }
+
+    .option-card .btn-option {
+      padding: 10px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+      text-align: center;
+      width: 48%;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .option-card .btn-option:hover {
+      background-color: #2980b9;
+    }
+
+    .option-card .btn-option[style*="background-color: #e74c3c"] {
+      background-color: #e74c3c;
+    }
+
+    .option-card .btn-option[style*="background-color: #e74c3c"]:hover {
+      background-color: #c0392b;
+    }
+
+    .flash-messages {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .flash-message {
+      padding: 10px 15px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .flash-message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .flash-message.danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Admin - Criminal Reports</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% if requests %}
+      {% for request in requests %}
+      <div class="option-card">
+        <img src="{{ url_for('serve_sketch', filename=request.sketch_filename) }}" alt="Criminal Photo" style="max-width: 200px; max-height: 200px; object-fit: contain;">
+        <h3>{{ request.first_name }} {{ request.last_name }}</h3>
+        <p><strong>Age:</strong> {{ request.age }}</p>
+        <p><strong>Crime:</strong> {{ request.crime }}</p>
+        <p><strong>Area:</strong> {{ request.arrested }}</p>
+        {% if request.proof_filename %}
+        <p><strong>Proof:</strong> <a href="{{ url_for('serve_proof', filename=request.proof_filename) }}" target="_blank">Download</a></p>
+        {% else %}
+        <p><strong>Proof:</strong> No proof file provided</p>
+        {% endif %}
+        <p><strong>Submitted by:</strong> {{ request.submitted_by }}</p>
+        <p><strong>Token:</strong> {{ request.token }}</p>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+          <a href="{{ url_for('authenticate_criminal', token=request.token) }}" class="btn-option">Authenticate Criminal</a>
+          <a href="{{ url_for('reject_criminal', token=request.token) }}" class="btn-option" style="background-color: #e74c3c;">Not a Criminal</a>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div style="text-align: center; padding: 30px;">
+        <p>No criminal report requests at this time.</p>
+      </div>
+    {% endif %}
+
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="{{ url_for('admin_dashboard') }}" class="btn-option">Back to Dashboard</a>
+    </div>
+  </div>
+
+</body>
+</html>

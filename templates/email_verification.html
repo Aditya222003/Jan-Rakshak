@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+    <title>Criminal Sighting Verified</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 0 0 5px 5px;
+            border: 1px solid #eee;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        h2 {
+            color: #2e7d32;
+        }
+        .details {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #43e97b;
+        }
+        .note {
+            font-style: italic;
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Criminal Sighting Verified</h1>
+    </div>
+    <div class="content">
+        <h2>Thank You for Your Report!</h2>
+        <p>Dear {{ username }},</p>
+        <p>We are pleased to inform you that your reported sighting of <strong>{{ criminal_name }}</strong> (Criminal ID: {{ criminal_id }}) has been verified by our officials.</p>
+
+        <div class="details">
+            <p><strong>Criminal:</strong> {{ criminal_name }}</p>
+            <p><strong>Criminal ID:</strong> {{ criminal_id }}</p>
+            <p><strong>Location:</strong> {{ location }}</p>
+            <p><strong>Date:</strong> {{ sighting_date }}</p>
+            <p><strong>Time:</strong> {{ sighting_time }}</p>
+        </div>
+
+        {% if admin_notes %}
+        <div class="note">
+            <p><strong>Official's Notes:</strong> {{ admin_notes }}</p>
+        </div>
+        {% endif %}
+
+        <p>Your vigilance and prompt reporting have been invaluable to our efforts in maintaining public safety. Law enforcement has been notified and appropriate action is being taken.</p>
+
+        <p>Thank you for your cooperation and commitment to community safety.</p>
+
+        <p>Sincerely,<br>
+        Criminal Identification System Team</p>
+    </div>
+    <div class="footer">
+        <p>This is an automated message. Please do not reply to this email.</p>
+        <p>&copy; 2025 Criminal Identification System. All rights reserved.</p>
+    </div>
+</body>
+</html>

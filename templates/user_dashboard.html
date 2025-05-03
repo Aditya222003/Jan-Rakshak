@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard | Criminal Identification System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      --warning-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      --info-gradient: linear-gradient(135deg, #0acffe 0%, #495aff 100%);
+      --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+      --light-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+
+      --primary-color: #4a6cf7;
+      --secondary-color: #f5576c;
+      --success-color: #43e97b;
+      --danger-color: #fa709a;
+      --warning-color: #f6d365;
+      --info-color: #0acffe;
+      --dark-color: #2c3e50;
+      --light-color: #f8f9fa;
+
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.07);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.1);
+
+      --border-radius-sm: 4px;
+      --border-radius-md: 8px;
+      --border-radius-lg: 16px;
+      --border-radius-xl: 24px;
+
+      --transition-fast: all 0.2s ease;
+      --transition-normal: all 0.3s ease;
+      --transition-slow: all 0.5s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 50%, #6a85b6 100%);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      color: var(--dark-color);
+      line-height: 1.6;
+    }
+
+    @keyframes gradient {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    header {
+      background: var(--dark-gradient);
+      color: white;
+      padding: 30px 0;
+      text-align: center;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+      padding-bottom: 60px;
+    }
+
+    .jan-rakshak-title {
+      font-weight: 800;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      letter-spacing: 2px;
+      max-width: 800px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #3498db, #2ecc71);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .jan-rakshak-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 5px auto 10px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 500;
+      max-width: 80%;
+    }
+
+    .header-actions {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .activity-toggle-btn {
+      background: var(--info-gradient);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .activity-toggle-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .activity-toggle-btn.active {
+      background: var(--success-gradient);
+    }
+
+    .logout-btn {
+      background: var(--danger-gradient);
+      color: white;
+      padding: 10px 20px;
+      border-radius: var(--border-radius-md);
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+
+
+    .welcome-message {
+      text-align: center;
+      margin-bottom: 50px;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--dark-color);
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: var(--border-radius-lg);
+      padding: 30px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-normal);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(5px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--primary-gradient);
+      transition: var(--transition-normal);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .feature-card:hover::before {
+      height: 8px;
+    }
+
+    .feature-card h3 {
+      color: var(--dark-color);
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .feature-card p {
+      margin-bottom: 25px;
+      color: #555;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--primary-gradient);
+      color: white;
+      padding: 12px 25px;
+      border-radius: var(--border-radius-md);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    .btn-accent {
+      background: var(--danger-gradient);
+    }
+
+    .btn-accent:hover {
+      box-shadow: 0 5px 15px rgba(250, 112, 154, 0.4);
+    }
+
+    .btn-warning {
+      background: var(--warning-gradient);
+    }
+
+    .btn-warning:hover {
+      box-shadow: 0 5px 15px rgba(246, 211, 101, 0.4);
+    }
+
+    .btn-success {
+      background: var(--success-gradient);
+    }
+
+    .btn-success:hover {
+      box-shadow: 0 5px 15px rgba(67, 233, 123, 0.4);
+    }
+
+    .btn-info {
+      background: var(--info-gradient);
+    }
+
+    .btn-info:hover {
+      box-shadow: 0 5px 15px rgba(10, 207, 254, 0.4);
+    }
+
+    /* Developers Section */
+    .developers-section {
+      margin-top: 50px;
+      padding: 25px 20px;
+      background: linear-gradient(135deg, rgba(240, 240, 245, 0.9), rgba(250, 250, 255, 0.9));
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    .developers-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #2c3e50;
+      position: relative;
+      display: inline-block;
+    }
+
+    .developers-title:after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      border-radius: 3px;
+    }
+
+    .developers-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .developer-card {
+      width: 200px;
+      padding: 20px;
+      background: white;
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .developer-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .developer-image-container {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 15px;
+      border-radius: 50%;
+      padding: 5px;
+      background: linear-gradient(135deg, #3498db, #2ecc71);
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .developer-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid white;
+    }
+
+    /* Special styling for Aditya's image to zoom out */
+    .developer-card:first-child .developer-image {
+      object-fit: contain;
+      background-color: white;
+    }
+
+    .developer-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 10px 0 5px;
+      color: #2c3e50;
+    }
+
+    .developer-role {
+      font-size: 0.9rem;
+      color: #7f8c8d;
+      margin: 0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 30px;
+      color: #777;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto;
+      display: block;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* Special card styles */
+    .feature-card.warning {
+      background: linear-gradient(135deg, rgba(255, 236, 179, 0.8), rgba(255, 248, 227, 0.8));
+      border: 2px solid rgba(255, 193, 7, 0.3);
+    }
+
+    .feature-card.warning::before {
+      background: var(--warning-gradient);
+    }
+
+    .feature-card.warning h3 {
+      color: #e65100;
+    }
+
+    .feature-card.danger {
+      background: linear-gradient(135deg, rgba(255, 205, 210, 0.8), rgba(255, 235, 238, 0.8));
+      border: 2px solid rgba(244, 67, 54, 0.3);
+    }
+
+    .feature-card.danger::before {
+      background: var(--danger-gradient);
+    }
+
+    .feature-card.danger h3 {
+      color: #c62828;
+    }
+
+    .feature-card.success {
+      background: linear-gradient(135deg, rgba(200, 230, 201, 0.8), rgba(232, 245, 233, 0.8));
+      border: 2px solid rgba(76, 175, 80, 0.3);
+    }
+
+    .feature-card.success::before {
+      background: var(--success-gradient);
+    }
+
+    .feature-card.success h3 {
+      color: #2e7d32;
+    }
+
+    .feature-card.info {
+      background: linear-gradient(135deg, rgba(179, 229, 252, 0.8), rgba(225, 245, 254, 0.8));
+      border: 2px solid rgba(3, 169, 244, 0.3);
+    }
+
+    .feature-card.info::before {
+      background: var(--info-gradient);
+    }
+
+    .feature-card.info h3 {
+      color: #0277bd;
+    }
+
+    /* Main Content and Activity Tracker */
+    .container {
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .main-content {
+      transition: transform 0.5s ease;
+      width: 100%;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    /* Activity Tracker Styles */
+    .activity-tracker {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      height: 100vh;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 245, 255, 0.95));
+      box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      border-left: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .activity-tracker.active {
+      right: 0;
+    }
+
+    .activity-tracker-inner {
+      padding: 80px 25px 25px;
+      height: 100%;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    }
+
+    .activity-tracker-inner::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .activity-tracker-inner::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .activity-tracker-inner::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    /* Notification badge for activity toggle */
+    .activity-toggle-btn {
+      position: relative;
+    }
+
+    .activity-toggle-btn::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 12px;
+      height: 12px;
+      background-color: #e74c3c;
+      border-radius: 50%;
+      border: 2px solid white;
+      display: none;
+    }
+
+    .activity-toggle-btn.has-notifications::after {
+      display: block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .activity-title {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2c3e50;
+      font-size: 1.5rem;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+      position: relative;
+    }
+
+    .activity-title:after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+    }
+
+    .activity-section {
+      margin-bottom: 30px;
+    }
+
+    .activity-section h3 {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+    }
+
+    .activity-section h3 i {
+      margin-right: 10px;
+      color: #3498db;
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .activity-item {
+      display: flex;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      padding: 15px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .activity-item:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 4px;
+    }
+
+    .activity-item.pending:before {
+      background-color: #f39c12;
+    }
+
+    .activity-item.approved:before {
+      background-color: #2ecc71;
+    }
+
+    .activity-item.rejected:before {
+      background-color: #e74c3c;
+    }
+
+    .activity-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .activity-icon {
+      margin-right: 15px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .activity-item.pending .activity-icon i {
+      color: #f39c12;
+    }
+
+    .activity-item.approved .activity-icon i {
+      color: #2ecc71;
+    }
+
+    .activity-item.rejected .activity-icon i {
+      color: #e74c3c;
+    }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .activity-name {
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .activity-date {
+      font-size: 0.85rem;
+      color: #7f8c8d;
+    }
+
+    .activity-details p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .status-pending {
+      background-color: rgba(243, 156, 18, 0.2);
+      color: #f39c12;
+    }
+
+    .status-approved, .status-verified {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: #2ecc71;
+    }
+
+    .status-rejected {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+    }
+
+    .rejection-reason, .admin-notes {
+      font-style: italic;
+      font-size: 0.85rem;
+      color: #7f8c8d;
+    }
+
+    .no-activity {
+      text-align: center;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      color: #7f8c8d;
+    }
+
+    .no-activity i {
+      margin-right: 5px;
+      color: #3498db;
+    }
+
+    .evidence-preview {
+      margin-top: 10px;
+    }
+
+    .evidence-preview a {
+      display: inline-block;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .evidence-preview img {
+      width: 100%;
+      max-height: 100px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .evidence-preview a:hover img {
+      transform: scale(1.05);
+    }
+
+    .view-evidence {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      text-align: center;
+      padding: 5px;
+      font-size: 0.8rem;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .evidence-preview a:hover .view-evidence {
+      transform: translateY(0);
+    }
+
+    .activity-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .stat-item {
+      text-align: center;
+      flex: 1;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #3498db;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #7f8c8d;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .features {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .activity-tracker {
+        width: 100%;
+        right: -100%;
+      }
+
+      .activity-toggle-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+      }
+
+      .logout-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+        padding: 0 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-actions {
+        top: 10px;
+        right: 10px;
+        gap: 10px;
+      }
+
+      .activity-toggle-btn {
+        width: 32px;
+        height: 32px;
+      }
+
+      .logout-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      .activity-tracker-inner {
+        padding: 60px 15px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-container">
+    <img src="{{ url_for('static', filename='logo.svg') }}" alt="Criminal Identification System Logo" class="logo">
+  </div>
+  <h1 class="jan-rakshak-title">JAN-RAKSHAK</h1>
+  <h2 class="jan-rakshak-subtitle">The Complete Criminal Intelligence System - From Sketch to Capture</h2>
+  <div class="header-actions">
+    <button id="activity-toggle" class="activity-toggle-btn" title="Toggle Activity Tracker">
+      <i class="fas fa-eye"></i>
+    </button>
+    <a href="{{ url_for('logout') }}" class="logout-btn">Logout {{ username }}</a>
+  </div>
+</header>
+
+<div class="container">
+  <div class="welcome-message">
+    Welcome to User Home Page, {{ username }}!
+  </div>
+
+  <div class="main-content">
+    <div class="features">
+      <div class="feature-card info">
+        <h3>Sketch To Criminal</h3>
+        <p>Upload a criminal sketch for identification and matching with known criminals.</p>
+        <a href="{{ url_for('match_criminal') }}" class="btn btn-info"><i class="fas fa-search"></i> Match Sketch</a>
+      </div>
+
+      <div class="feature-card">
+        <h3>Search Criminal History</h3>
+        <p>Get access to detailed criminal records and history.</p>
+        <a href="{{ url_for('search_criminal') }}" class="btn"><i class="fas fa-history"></i> Search Records</a>
+      </div>
+
+      <div class="feature-card danger">
+        <h3>Most Wanted Criminals</h3>
+        <p>View the latest wanted criminals in India with live updates.</p>
+        <a href="{{ url_for('wanted_criminals') }}" class="btn btn-accent"><i class="fas fa-exclamation-triangle"></i> Explore Now</a>
+      </div>
+
+      <div class="feature-card warning">
+        <h3>Seen a Wanted Criminal?</h3>
+        <p>Report a sighting of a wanted criminal to help authorities.</p>
+        <a href="{{ url_for('report_sighting') }}" class="btn btn-warning"><i class="fas fa-eye"></i> Report Sighting</a>
+      </div>
+
+      <div class="feature-card success">
+        <h3>Report a New Criminal</h3>
+        <p>Fill in criminal details to register for verification.</p>
+        <a href="{{ url_for('report_criminal') }}" class="btn btn-success"><i class="fas fa-user-plus"></i> Report Now</a>
+      </div>
+
+      <div class="feature-card">
+        <h3>Check Registration Status</h3>
+        <p>Enter your 10-digit token to check the registration status.</p>
+        <a href="{{ url_for('check_registration_status') }}" class="btn"><i class="fas fa-clipboard-check"></i> Check Status</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Activity Tracker Section -->
+  <div class="activity-tracker">
+    <div class="activity-tracker-inner">
+      <h2 class="activity-title">Your Activity Tracker</h2>
+
+      <!-- Criminal Reports Section -->
+      <div class="activity-section">
+        <h3><i class="fas fa-user-plus"></i> Criminal Reports</h3>
+        {% if criminal_reports %}
+          <div class="activity-list">
+            {% for report in criminal_reports %}
+              <div class="activity-item {% if report.status == 'pending' %}pending{% elif report.status == 'approved' %}approved{% elif report.status == 'rejected' %}rejected{% endif %}">
+                <div class="activity-icon">
+                  {% if report.status == 'pending' %}
+                    <i class="fas fa-clock"></i>
+                  {% elif report.status == 'approved' %}
+                    <i class="fas fa-check-circle"></i>
+                  {% elif report.status == 'rejected' %}
+                    <i class="fas fa-times-circle"></i>
+                  {% endif %}
+                </div>
+                <div class="activity-content">
+                  <div class="activity-header">
+                    <span class="activity-name">{{ report.first_name }} {{ report.last_name }}</span>
+                    <span class="activity-date">{{ report.date_submitted }}</span>
+                  </div>
+                  <div class="activity-details">
+                    <p>Crime: {{ report.crime }}</p>
+                    <p>Status: <span class="status-badge status-{{ report.status }}">{{ report.status|capitalize }}</span></p>
+                    {% if report.status == 'rejected' and report.rejection_reason %}
+                      <p class="rejection-reason">Reason: {{ report.rejection_reason }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="no-activity">
+            <p><i class="fas fa-info-circle"></i> You haven't reported any criminals yet.</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Criminal Sightings Section -->
+      <div class="activity-section">
+        <h3><i class="fas fa-eye"></i> Criminal Sightings</h3>
+        {% if criminal_sightings %}
+          <div class="activity-list">
+            {% for sighting in criminal_sightings %}
+              <div class="activity-item {% if sighting.status == 'pending' %}pending{% elif sighting.status == 'verified' %}approved{% elif sighting.status == 'rejected' %}rejected{% endif %}">
+                <div class="activity-icon">
+                  {% if sighting.status == 'pending' %}
+                    <i class="fas fa-clock"></i>
+                  {% elif sighting.status == 'verified' %}
+                    <i class="fas fa-check-circle"></i>
+                  {% elif sighting.status == 'rejected' %}
+                    <i class="fas fa-times-circle"></i>
+                  {% endif %}
+                </div>
+                <div class="activity-content">
+                  <div class="activity-header">
+                    <span class="activity-name">{{ sighting.criminal_name }}</span>
+                    <span class="activity-date">{{ sighting.sighting_date }}</span>
+                  </div>
+                  <div class="activity-details">
+                    <p>Location: {{ sighting.location }}</p>
+                    <p>Status: <span class="status-badge status-{{ sighting.status }}">{{ sighting.status|capitalize }}</span></p>
+                    {% if sighting.admin_notes %}
+                      <p class="admin-notes">Notes: {{ sighting.admin_notes }}</p>
+                    {% endif %}
+                    {% if sighting.image_filename %}
+                      <div class="evidence-preview">
+                        <a href="{{ url_for('serve_evidence', filename=sighting.image_filename) }}" target="_blank">
+                          <img src="{{ url_for('serve_evidence', filename=sighting.image_filename) }}" alt="Evidence">
+                          <span class="view-evidence">View Evidence</span>
+                        </a>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="no-activity">
+            <p><i class="fas fa-info-circle"></i> You haven't reported any criminal sightings yet.</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Activity Stats -->
+      <div class="activity-stats">
+        <div class="stat-item">
+          <div class="stat-value">{{ criminal_reports|length if criminal_reports else 0 }}</div>
+          <div class="stat-label">Criminal Reports</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ criminal_sightings|length if criminal_sightings else 0 }}</div>
+          <div class="stat-label">Criminal Sightings</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ approved_reports + verified_sightings }}</div>
+          <div class="stat-label">Verified Reports</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="developers-section">
+  <h2 class="developers-title">Meet the Developers</h2>
+  <div class="developers-container">
+    <div class="developer-card">
+      <div class="developer-image-container">
+        <img src="{{ url_for('static', filename='developers/1.png') }}" alt="Aditya Raul" class="developer-image">
+      </div>
+      <h3 class="developer-name">Aditya Raul</h3>
+    </div>
+
+    <div class="developer-card">
+      <div class="developer-image-container">
+        <img src="{{ url_for('static', filename='developers/2.png') }}" alt="Rutuja Ingale" class="developer-image">
+      </div>
+      <h3 class="developer-name">Rutuja Ingale</h3>
+    </div>
+
+    <div class="developer-card">
+      <div class="developer-image-container">
+        <img src="{{ url_for('static', filename='developers/3.png') }}" alt="Aryan Sarvade" class="developer-image">
+      </div>
+      <h3 class="developer-name">Aryan Sarvade</h3>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 COEP Tech BTech Project. All rights reserved.</p>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const activityToggle = document.getElementById('activity-toggle');
+    const activityTracker = document.querySelector('.activity-tracker');
+    const mainContent = document.querySelector('.main-content');
+
+    // Initialize - hide activity tracker
+    activityTracker.classList.remove('active');
+
+    // Check if there are pending reports or sightings
+    const pendingReports = document.querySelectorAll('.activity-item.pending');
+    if (pendingReports.length > 0) {
+      activityToggle.classList.add('has-notifications');
+    }
+
+    // Toggle activity tracker when eye button is clicked
+    activityToggle.addEventListener('click', function() {
+      activityTracker.classList.toggle('active');
+      activityToggle.classList.toggle('active');
+
+      // Change icon based on state
+      const icon = activityToggle.querySelector('i');
+      if (activityTracker.classList.contains('active')) {
+        icon.className = 'fas fa-eye-slash';
+        activityToggle.title = 'Hide Activity Tracker';
+      } else {
+        icon.className = 'fas fa-eye';
+        activityToggle.title = 'Show Activity Tracker';
+      }
+    });
+
+    // Close activity tracker when clicking outside
+    document.addEventListener('click', function(event) {
+      if (activityTracker.classList.contains('active') &&
+          !activityTracker.contains(event.target) &&
+          event.target !== activityToggle &&
+          !activityToggle.contains(event.target)) {
+        activityTracker.classList.remove('active');
+        activityToggle.classList.remove('active');
+        activityToggle.querySelector('i').className = 'fas fa-eye';
+        activityToggle.title = 'Show Activity Tracker';
+      }
+    });
+
+    // Add a close button to the activity tracker
+    const activityTitle = document.querySelector('.activity-title');
+    const closeButton = document.createElement('button');
+    closeButton.className = 'activity-close-btn';
+    closeButton.innerHTML = '<i class="fas fa-times"></i>';
+    closeButton.title = 'Close Activity Tracker';
+
+    // Insert the close button after the activity title
+    activityTitle.parentNode.insertBefore(closeButton, activityTitle.nextSibling);
+
+    // Add event listener to close button
+    closeButton.addEventListener('click', function() {
+      activityTracker.classList.remove('active');
+      activityToggle.classList.remove('active');
+      activityToggle.querySelector('i').className = 'fas fa-eye';
+      activityToggle.title = 'Show Activity Tracker';
+    });
+
+    // Add CSS for close button
+    const style = document.createElement('style');
+    style.textContent = `
+      .activity-close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: #777;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        padding: 5px;
+        z-index: 1;
+      }
+
+      .activity-close-btn:hover {
+        color: #e74c3c;
+      }
+    `;
+    document.head.appendChild(style);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <title>Token Generated</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .token-box {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .token-box h2 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .token-box h1 {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-size: 2rem;
+      letter-spacing: 2px;
+    }
+
+    .token-box p {
+      color: #555;
+      font-size: 1rem;
+    }
+
+    .note {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="token-box">
+    <h2>Criminal Report Submitted</h2>
+    <p>Your Registration Token is:</p>
+    <h1>{{ token }}</h1>
+    <p>Keep this ID safe to check your registration status later.</p>
+    <p class="note">You can use this token to track verification progress from your dashboard.</p>
+  </div>
+</body>
+</html>

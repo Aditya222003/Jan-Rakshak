@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Most Wanted Criminals | Criminal Identification System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+    <style>
+        :root {
+            --primary-color: #3a6ea5;
+            --secondary-color: #004e98;
+            --accent-color: #ff9505;
+            --danger-color: #e74c3c;
+            --light-color: #f0f4f8;
+            --dark-color: #333;
+            --primary-gradient: linear-gradient(135deg, #3a6ea5, #004e98);
+            --border-radius-sm: 5px;
+            --border-radius-md: 10px;
+            --border-radius-lg: 15px;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+            --transition-normal: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            border-top: 5px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="rgba(58, 110, 165, 0.03)" width="50" height="50" x="0" y="0"></rect><rect fill="rgba(58, 110, 165, 0.03)" width="50" height="50" x="50" y="50"></rect></svg>');
+            opacity: 0.5;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            position: relative;
+            text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .subtitle {
+            color: #555;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            position: relative;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 30px;
+            background-color: transparent;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .back-link::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .back-link:hover::before {
+            width: 100%;
+        }
+
+        .back-link i {
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .back-link:hover i {
+            transform: translateX(-3px);
+        }
+
+        .criminals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .criminal-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .criminal-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            border-color: rgba(0, 78, 152, 0.2);
+        }
+
+        .criminal-card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3a6ea5, #004e98, #ff9505);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.4s ease;
+        }
+
+        .criminal-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .criminal-image {
+            width: 100%;
+            height: 250px;
+            object-fit: contain; /* Changed from 'cover' to 'contain' to show full image */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background-color: #f5f5f5;
+            border: 4px solid white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: block;
+            cursor: pointer; /* Add cursor pointer to indicate it's clickable */
+            transition: transform 0.3s ease;
+        }
+
+        .criminal-image:hover {
+            transform: scale(1.03); /* Slight zoom effect on hover */
+        }
+
+        .criminal-details {
+            padding: 25px;
+            position: relative;
+        }
+
+        .criminal-details::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+
+        .criminal-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--dark-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        .criminal-name::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .criminal-card:hover .criminal-name::after {
+            width: 100%;
+        }
+
+        .criminal-description {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 15px;
+            border-left: 3px solid rgba(58, 110, 165, 0.2);
+            font-style: italic;
+        }
+
+        .criminal-id-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .report-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            border: none;
+        }
+
+        .report-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #c0392b, var(--danger-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .report-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .report-btn:hover::before {
+            opacity: 1;
+        }
+
+        .report-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.4);
+        }
+
+        .report-btn i {
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .report-btn:hover i {
+            transform: translateY(-2px);
+        }
+
+        .no-criminals {
+            text-align: center;
+            padding: 50px 30px;
+            color: #555;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .no-criminals::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .no-criminals h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .no-criminals h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+
+        .no-criminals p {
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 25px;
+            color: #666;
+            font-size: 0.95rem;
+            position: relative;
+            border-top: 1px solid #eee;
+        }
+
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+            margin-top: -2px;
+        }
+
+        footer p {
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        footer p:hover {
+            opacity: 1;
+        }
+
+        /* Image Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            overflow: auto;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: transparent;
+            margin: 5% auto;
+            padding: 0;
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 70vh;
+            border: 8px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-button {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background-color: var(--accent-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
+            transition: all 0.2s ease;
+        }
+
+        .close-button:hover {
+            background-color: #e84118;
+            transform: scale(1.1);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            display: block;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='logo.svg') }}" alt="Criminal Identification System Logo" class="logo">
+            </div>
+            <h1>Most Wanted Criminals</h1>
+            <p class="subtitle">These individuals are currently wanted by law enforcement agencies</p>
+            <a href="{{ url_for('user_dashboard') }}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </header>
+
+        {% if criminals %}
+            <div class="criminals-grid">
+                {% for criminal in criminals %}
+                    <div class="criminal-card">
+                        <!-- <div class="criminal-id-badge">ID: {{ criminal.id }}</div> -->
+                        <img src="{{ url_for('serve_view_record', filename=criminal.image_filename) }}" alt="{{ criminal.name }}" class="criminal-image" onclick="openImageModal(this.src, '{{ criminal.name }}')">
+                        <div class="criminal-details">
+                            <h3 class="criminal-name">{{ criminal.name }}</h3>
+                            <p class="criminal-description">{{ criminal.description }}</p>
+                            <a href="{{ url_for('report_sighting') }}" class="report-btn"><i class="fas fa-eye"></i> Report Sighting</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-criminals">
+                <h2>No wanted criminals at this time</h2>
+                <p>There are currently no criminals on the most wanted list.</p>
+            </div>
+        {% endif %}
+
+        <footer>
+            <p>&copy; 2025 Criminal Identification System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">Criminal Image</h2>
+            </div>
+            <div class="close-button" onclick="closeImageModal()">&times;</div>
+            <img id="modalImage" class="modal-image" src="" alt="Criminal Image">
+        </div>
+    </div>
+
+    <script>
+        // Image modal functionality
+        function openImageModal(src, name) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+
+            modalImage.src = src;
+            modalTitle.textContent = name;
+            modal.style.display = 'block';
+
+            // Prevent scrolling of the background
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+
+            // Re-enable scrolling
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target == modal) {
+                closeImageModal();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+    </script>
+</body>
+</html>

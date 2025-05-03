@@ -1,0 +1,199 @@
+sketch_filename,name,gender,age,crimes,area_of_crime
+1.jpg,Shivam Dubey,male,42,"Robbery, Murder",Mumbai
+2.jpg,Rakesh Chavan,male,49,Domestic Violence,Gujrat
+3.jpg,Manoj Kane,male,21,Cybercrime,Banglore
+4.jpg,Imran Qureshi,male,39,"Car Theft, Cybercrime",Bhopal
+5.jpg,Michael Hill,male,31,Credit Card Fraud,London
+6.jpg,Ankit Rawat,male,27,Assault,Varanasi
+7.jpg,Calvin Moore,female,25,Murder,America
+8.jpg,Ashok Tyagi,male,40,"Theft, Fraud",Delhi
+9.jpg,Matthew Becker,male,27,Kidnapping,"Irvine, Phoenix"
+10.jpg,Dawood Ibrahim,male,43,"Extortion, Drug Trafficking, Illegal Arms Dealing","Mumbai, Delhi"
+11.jpg,Rajeev Kapoor,male,35,Murder,Hyderabad
+12.jpg,Maria Serrano,male,30,"Drug Trafficking, Fraud, Domestic Violence","Philadelphia, Jacksonville"
+13.jpg,Keith Anderson,male,31,"Car Theft, Fraud, Assault","Corpus Christi, Cincinnati"
+14.jpg,Amy Gray,male,32,"Assault, Identity Theft, Burglary","Chicago, Charlotte"
+15.jpg,Osama bin Laden,male,54,"USS Cole bombing, U.S. embassy bombings",US
+16.jpg,Abdul Rajak,male,34,"Cybercrime, Car Theft",Agra
+17.jpg,Travis Harper,male,35,"Burglary, Homicide","Buffalo, Garland"
+18.jpg,Taufiq Alam,male,36,Cybercrime,Mysuru
+19.jpg,Faizan Ali,male,37,"Burglary, Fraud, Cybercrime",New Delhi
+20.jpg,Jitendra Dubey,male,38,Human Trafficking,Ludhiana
+21.jpg,Osama bin Laden,male,57,"Domestic Violence, Vandalism, Bomb blasting",Us
+22.jpg,Osama bin Laden,male,57,"Bomb Blasting, USS Cole bombing,  September 11 attacks (9/11)",US
+23.jpg,Osama bin Laden,male,57,bombings in Kenya and Tanzania,US
+25.jpg,Osama bin Laden,male,57,Domestic Violence,US
+26.jpg,Taylor Torres,male,44,"Shoplifting, Money Laundering, Credit Card Fraud","Birmingham, Garland"
+27.jpg,Kim Rogers,male,45,Arson,Fresno
+28.jpg,Ryan Villarreal,male,46,"Arson, Human Trafficking","New York, Mesa"
+29.jpg,Joseph Franco,male,47,"Domestic Violence, Burglary, Illegal Arms Dealing",Minneapolis
+30.jpg,Dana Ford,male,48,Counterfeiting,Henderson
+31.jpg,Dawood Ibrahim,male,49,"Kidnapping, Arson, Shoplifting",Delhi
+32.jpg,Kurt Crawford,male,50,"Shoplifting, Identity Theft, Arson",Chesapeake
+33.jpg,Haley Day,female,51,"Homicide, Armed Robbery, Vandalism","Raleigh, Laredo"
+34.jpg,David Conner,male,52,"Counterfeiting, Extortion","Detroit, Henderson"
+35.jpg,Deborah Allen,female,53,"Burglary, Arson, Fraud","Lexington, San Bernardino"
+36.jpg,James Hale,male,54,Extortion,Detroit
+37.jpg,Jennifer Smith,female,55,"Homicide, Domestic Violence","Albuquerque, Toledo"
+38.jpg,Marissa Greer,male,56,"Identity Theft, Fraud, Illegal Arms Dealing","Washington DC, Lincoln"
+39.jpg,Robert Williams,female,57,"Kidnapping, Identity Theft",Stockton
+40.jpg,Kristen Mcdowell,male,58,Vandalism,"Cleveland, Anchorage"
+42.jpg,Martha Roberts,male,60,Identity Theft,"Plano, Albuquerque"
+44.jpg,Matthew Carrillo,male,62,Vandalism,"Phoenix, Sacramento"
+45.jpg,Joshua Lee,female,63,"Vandalism, Cybercrime, Credit Card Fraud",Denver
+46.jpg,Jessica Graham,male,64,"Drug Trafficking, Illegal Arms Dealing, Money Laundering","Charlotte, Fort Worth"
+47.jpg,James Mayo,female,65,Assault,"Fort Worth, Cincinnati"
+48.jpg,Rodney Henry,male,66,"Fraud, Assault",Toledo
+49.jpg,Vanessa Holmes,female,67,Money Laundering,Norfolk
+50.jpg,Jessica Lewis,male,18,Homicide,Memphis
+51.jpg,Mary Baker,female,19,"Assault, Arson","New York, Lincoln"
+52.jpg,Wendy Copeland,male,20,Homicide,"Fort Wayne, Buffalo"
+53.jpg,Alexis Greene,female,21,"Illegal Arms Dealing, Fraud, Money Laundering",Charlotte
+54.jpg,Dominique Mendoza,male,22,Kidnapping,Colorado Springs
+55.jpg,Lori Franklin,female,23,Credit Card Fraud,"Dallas, Laredo"
+56.jpg,Brenda Henderson,male,24,Burglary,"Philadelphia, Atlanta"
+57.jpg,Rebecca Jackson,female,25,"Human Trafficking, Credit Card Fraud",Mesa
+58.jpg,Ryan Cohen,male,26,"Arson, Credit Card Fraud","Dallas, Lexington"
+59.jpg,Jeffrey George,female,27,"Counterfeiting, Shoplifting, Assault",Chesapeake
+60.jpg,Kelly Martin,male,28,"Assault, Armed Robbery, Identity Theft","Fort Worth, Memphis"
+61.jpg,Wesley Kim,female,29,"Car Theft, Homicide, Shoplifting",Fort Worth
+62.jpg,Teresa Ramirez,male,30,"Extortion, Human Trafficking, Money Laundering","Laredo, Garland"
+63.jpg,Joe Williams,female,31,Credit Card Fraud,"Indianapolis, Chennai"
+64.jpg,Sandra Carter,male,32,Illegal Arms Dealing,"Sacramento, Louisville"
+65.jpg,Jonathan Brooks,female,33,"Cybercrime, Burglary",Plano
+66.jpg,Kelly Cox,male,34,Money Laundering,"Lincoln, Detroit"
+67.jpg,Alex Parrish,female,35,"Kidnapping, Vandalism, Credit Card Fraud",Reno
+68.jpg,Troy Jones,male,36,"Kidnapping, Cybercrime",Fort Wayne
+69.jpg,Ashley Kelly,female,37,"Assault, Cybercrime, Arson",Charlotte
+70.jpg,James Dunn,male,38,"Assault, Money Laundering",Corpus Christi
+71.jpg,Evan Williams,female,39,Shoplifting,Reno
+72.jpg,Theresa Miller,male,40,Counterfeiting,New Orleans
+73.jpg,Jasmine Smith,female,41,Car Theft,"Delhi, Corpus Christi"
+74.jpg,William Robinson,male,42,"Assault, Kidnapping, Money Laundering","Albuquerque, Reno"
+75.jpg,Jenna Keith,female,43,"Credit Card Fraud, Assault","Birmingham, Mumbai"
+76.jpg,Ashley Boyer,male,44,Cybercrime,"Anaheim, New Orleans"
+77.jpg,William Chen,female,45,"Arson, Homicide, Car Theft",Miami
+78.jpg,Steven Yang,male,46,"Car Theft, Arson, Homicide","Oakland, Pune"
+79.jpg,Jessica Myers,female,47,Homicide,"Hialeah, Oakland"
+80.jpg,James Smith,male,48,"Shoplifting, Arson, Credit Card Fraud","Phoenix, Irvine"
+81.jpg,Kerri Velasquez,female,49,"Shoplifting, Kidnapping, Car Theft",Wichita
+82.jpg,Shannon Gibson,male,50,Kidnapping,Glendale
+83.jpg,Kelli Dunn,female,51,Armed Robbery,Las Vegas
+84.jpg,Christopher Young,male,52,"Human Trafficking, Extortion, Vandalism",Oakland
+85.jpg,Joshua Howard,female,53,Assault,Corpus Christi
+86.jpg,Megan Ho,male,54,"Shoplifting, Drug Trafficking, Human Trafficking",Henderson
+87.jpg,Rachel Rodriguez,female,55,Counterfeiting,Fresno
+88.jpg,Eric Anderson,male,56,"Vandalism, Counterfeiting","Philadelphia, Hialeah"
+89.jpg,Taylor Henry,female,57,Counterfeiting,Dallas
+90.jpg,Robert Marks,male,58,"Homicide, Cybercrime","Los Angeles, St. Louis"
+91.jpg,Katie Case,female,59,"Drug Trafficking, Fraud, Cybercrime","Greensboro, Fort Worth"
+92.jpg,Stephen Dudley,male,60,"Counterfeiting, Domestic Violence","Pittsburgh, San Jose"
+93.jpg,Sarah Fischer,female,61,Fraud,"Laredo, Newark"
+94.jpg,Luke Parks,male,62,Burglary,"Greensboro, Fort Wayne"
+95.jpg,Jose Collins,female,63,"Armed Robbery, Drug Trafficking",Lincoln
+96.jpg,Justin Simmons,male,64,"Homicide, Assault",Anchorage
+97.jpg,Anne Morrow,female,65,"Vandalism, Credit Card Fraud, Shoplifting","Reno, Minneapolis"
+98.jpg,Michael Garza,male,66,Arson,"Jaipur, New Orleans"
+99.jpg,Miss Rebecca Terrell MD,female,67,"Identity Theft, Vandalism, Kidnapping","Anchorage, Winston-Salem"
+100.jpg,Melissa Vincent,male,18,"Identity Theft, Burglary",Madison
+101.jpg,Richard Gonzalez,female,19,"Fraud, Drug Trafficking, Illegal Arms Dealing","Baltimore, Chandler"
+102.jpg,John Myers,male,20,"Fraud, Counterfeiting, Burglary","Santa Ana, Bakersfield"
+103.jpg,Stacy Velez,female,21,Drug Trafficking,"Kolkata, Laredo"
+104.jpg,Donald Bowman Jr.,male,22,"Armed Robbery, Money Laundering, Counterfeiting","Washington DC, Reno"
+105.jpg,Brett George,female,23,"Identity Theft, Assault","Portland, San Jose"
+106.jpg,Cole Schwartz,male,24,"Domestic Violence, Credit Card Fraud, Fraud",Colorado Springs
+107.jpg,David Morales,female,25,Vandalism,"Columbus, Denver"
+108.jpg,Tammy Sparks,male,26,Illegal Arms Dealing,Los Angeles
+109.jpg,Anthony Bridges,female,27,"Domestic Violence, Burglary, Cybercrime",Scottsdale
+110.jpg,Tina Castaneda,male,28,Money Laundering,Los Angeles
+111.jpg,James Aguilar,female,29,"Shoplifting, Kidnapping",Delhi
+112.jpg,Nicholas Briggs,male,30,Shoplifting,"New Orleans, San Antonio"
+113.jpg,Brandy Chung,female,31,"Shoplifting, Assault, Human Trafficking","Tulsa, Anchorage"
+114.jpg,Jennifer Davila,male,32,"Credit Card Fraud, Vandalism",Baton Rouge
+115.jpg,Adam Higgins,female,33,"Homicide, Fraud, Shoplifting",New York
+116.jpg,Bob Alvarez,male,34,Credit Card Fraud,"Cleveland, Irvine"
+117.jpg,Susan Kline,female,35,Fraud,Durham
+118.jpg,Margaret Flores,male,36,"Drug Trafficking, Extortion, Money Laundering",Albuquerque
+119.jpg,Anthony Willis,female,37,Shoplifting,"Chesapeake, Buffalo"
+120.jpg,Adrian Andrade,male,38,"Fraud, Car Theft",Fresno
+121.jpg,Rachel Richards,female,39,"Kidnapping, Identity Theft",Glendale
+122.jpg,Matthew Bolton,male,40,Arson,Oakland
+123.jpg,Amy Lloyd,female,41,Shoplifting,"Fremont, Chicago"
+124.jpg,Tracy Cobb,male,42,"Arson, Shoplifting, Counterfeiting","Gilbert, New Orleans"
+125.jpg,Jesus Henderson,female,43,"Credit Card Fraud, Kidnapping, Homicide",New Orleans
+126.jpg,Jerry Reyes,male,44,"Homicide, Credit Card Fraud",Columbus
+127.jpg,Alexander Pierce,female,45,Fraud,Norfolk
+128.jpg,Christopher Perez,male,46,Homicide,Baton Rouge
+129.jpg,Dr. Andrew Porter,female,47,"Domestic Violence, Assault, Illegal Arms Dealing","Lucknow, Lexington"
+130.jpg,Jonathan Taylor,male,48,"Arson, Shoplifting, Armed Robbery",North Las Vegas
+131.jpg,Christine Terry,female,49,"Extortion, Kidnapping","Garland, Mesa"
+132.jpg,Leslie Harmon,male,50,"Drug Trafficking, Assault",Arlington
+133.jpg,Willie Jones,female,51,"Money Laundering, Homicide","Lincoln, Corpus Christi"
+134.jpg,Tina Ramos,male,52,"Arson, Burglary","Minneapolis, Santa Ana"
+135.jpg,Alan Thomas,female,53,Extortion,Jacksonville
+136.jpg,Alison Russell,male,54,Armed Robbery,"Austin, Mesa"
+137.jpg,Rodney Moreno,female,55,"Homicide, Cybercrime, Identity Theft","Chennai, Atlanta"
+138.jpg,Felicia Sanchez,male,56,"Human Trafficking, Identity Theft, Arson","San Jose, Indianapolis"
+139.jpg,Isaac Harmon,female,57,Murder,Portland
+140.jpg,Jocelyn Knight,male,58,Domestic Violence,"Chennai, Gilbert"
+141.jpg,Cynthia Thomas,female,59,Kidnapping,Stockton
+142.jpg,April Daniel,male,60,"Money Laundering, Cybercrime",San Diego
+143.jpg,Christy Ritter,female,61,"Human Trafficking, Domestic Violence",Portland
+144.jpg,Robert Bryant,male,62,"Money Laundering, Burglary","Scottsdale, San Jose"
+145.jpg,Christopher King,female,63,"Arson, Illegal Arms Dealing","Kolkata, Austin"
+146.jpg,Ryan Briggs,male,64,"Cybercrime, Fraud, Counterfeiting",Boston
+147.jpg,Anita Tyler,female,65,"Armed Robbery, Burglary, Vandalism","Fort Worth, Los Angeles"
+148.jpg,Anne Carter,male,66,"Identity Theft, Money Laundering, Shoplifting",St. Paul
+149.jpg,Amy Rodriguez,female,67,Money Laundering,"Minneapolis, Memphis"
+150.jpg,Sharon Morales,male,18,Drug Trafficking,"Honolulu, Irving"
+151.jpg,Danny Hess,female,19,"Illegal Arms Dealing, Human Trafficking, Vandalism","Kansas City, Detroit"
+152.jpg,Kevin Brown,male,20,Assault,"Long Beach, Lubbock"
+153.jpg,Cassidy Dunlap,female,21,Vandalism,Wichita
+154.jpg,Emma Richardson,male,22,Murder,"Miami, Albuquerque"
+155.jpg,Eric Reeves,female,23,"Domestic Violence, Arson","Greensboro, Scottsdale"
+156.jpg,Courtney Hudson,male,24,"Burglary, Homicide","Atlanta, Albuquerque"
+157.jpg,Natalie Perry,female,25,Money Laundering,"Stockton, Birmingham"
+158.jpg,Jerome Roberts,male,26,"Counterfeiting, Assault, Money Laundering","Philadelphia, Pune"
+159.jpg,Matthew Garcia,female,27,"Counterfeiting, Credit Card Fraud, Fraud","New Orleans, Los Angeles"
+160.jpg,Christopher Roberts,male,28,"Armed Robbery, Domestic Violence","Cleveland, Chesapeake"
+161.jpg,Heather Jones,female,29,Extortion,"Reno, Chandler"
+162.jpg,Anthony Parker,male,30,"Cybercrime, Assault, Credit Card Fraud","Norfolk, Toledo"
+163.jpg,Dawn French,female,31,"Fraud, Car Theft",Arlington
+164.jpg,Jesse Alvarado,male,32,"Assault, Cybercrime, Shoplifting",Chicago
+165.jpg,Rebecca Bell,female,33,Money Laundering,"Birmingham, Aurora"
+166.jpg,Joseph Watkins,male,34,"Drug Trafficking, Identity Theft","Winston-Salem, Madison"
+167.jpg,Christina Patrick,female,35,"Credit Card Fraud, Kidnapping","Chandler, Austin"
+168.jpg,Mr. Patrick Morris,male,36,"Cybercrime, Shoplifting, Money Laundering","Portland, Kansas City"
+169.jpg,Jared Foster,female,37,Murder,Glendale
+170.jpg,Ashley Day,male,38,"Arson, Car Theft, Human Trafficking","Lucknow, San Jose"
+171.jpg,Lisa Ayala,female,39,"Cybercrime, Kidnapping",Ahmedabad
+172.jpg,Shannon Webb,male,40,"Kidnapping, Human Trafficking, Shoplifting","Memphis, Henderson"
+173.jpg,Aaron Jackson,female,41,"Fraud, Burglary, Illegal Arms Dealing",Ahmedabad
+174.jpg,Teresa Miller,male,42,Shoplifting,"Dallas, Riverside"
+175.jpg,Autumn Smith,female,43,Counterfeiting,"Columbus, Tucson"
+176.jpg,Sarah Maxwell,male,44,Car Theft,"Birmingham, Miami"
+177.jpg,Tyler Harris,female,45,"Domestic Violence, Money Laundering",Dallas
+178.jpg,Isaiah Collier,male,46,"Vandalism, Cybercrime","Columbus, Dallas"
+179.jpg,Samantha Martin,female,47,"Armed Robbery, Counterfeiting, Car Theft",Memphis
+180.jpg,Timothy Martin,male,48,"Homicide, Human Trafficking",San Bernardino
+181.jpg,Alicia Lee,female,49,"Kidnapping, Human Trafficking",Kansas City
+182.jpg,Christopher Evans,male,50,"Credit Card Fraud, Money Laundering, Vandalism",Philadelphia
+183.jpg,Sherri Rodgers,female,51,Credit Card Fraud,"Houston, Scottsdale"
+184.jpg,Kristina Johnson,male,52,Extortion,New Orleans
+185.jpg,Emily Brady,female,53,Murder,"Jaipur, Boise"
+186.jpg,Johnathan Cain,male,54,"Homicide, Armed Robbery, Extortion","Tucson, Henderson"
+187.jpg,Casey Johnson,female,55,Domestic Violence,"Lucknow, Stockton"
+188.jpg,Riley Johnson,male,56,"Assault, Extortion, Drug Trafficking","Mesa, Cincinnati"
+189.jpg,Lisa Cooper,female,57,"Counterfeiting, Identity Theft",Glendale
+190.jpg,Brandon Black,male,58,Money Laundering,Arlington
+191.jpg,Ryan Thompson,female,59,Illegal Arms Dealing,Aurora
+192.jpg,Gregory Poole,male,60,"Armed Robbery, Human Trafficking",Columbus
+193.jpg,Laurie Smith,female,61,"Counterfeiting, Kidnapping, Money Laundering","Memphis, Fresno"
+194.jpg,Travis Jenkins,male,62,"Human Trafficking, Extortion",Memphis
+195.jpg,Jessica Harris,male,43,Money Laundering,"Bangalore, Newark"
+196.jpg,Joshua Huang,male,64,Domestic Violence,"Tampa, Raleigh"
+197.jpg,Karina Francis,male,43,"Identity Theft, Kidnapping",Orlando
+198.jpg,Gary Kim,male,66,Armed Robbery,Chula Vista
+199.jpg,Denise Shepherd,male,43,"Drug Trafficking, Arson","Anaheim, Bakersfield"
+200.jpg,John Spencer,male,34,"Identity Theft, Murder","Austin, Colorado Springs"
+202.jpg,Sahil  Merut,male,25,Murder,Pune
