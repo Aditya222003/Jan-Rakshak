@@ -120,6 +120,59 @@ def init_wanted_criminals_storage():
         write_csv(WANTED_CRIMINALS_FILE, ['id', 'name', 'image_filename', 'description', 'status'], default_criminals)
         print(f"Created wanted_criminals.csv with {len(default_criminals)} default criminals")
 
+    # Ensure default images exist in the view_records folder
+    # This is especially important for deployment on platforms like Render
+    # where the uploads directory might not persist between deployments
+    default_images = {
+        '124.jpg': 'static/default_criminals/124.jpg',
+        '196.jpg': 'static/default_criminals/196.jpg',
+        '67.jpg': 'static/default_criminals/67.jpg',
+        '77.jpg': 'static/default_criminals/77.jpg',
+        '73.jpg': 'static/default_criminals/73.jpg'
+    }
+
+    # Create the static/default_criminals directory if it doesn't exist
+    os.makedirs('static/default_criminals', exist_ok=True)
+
+    # Check if the default images exist in the static folder, if not create placeholder images
+    for img_name, img_path in default_images.items():
+        if not os.path.exists(img_path):
+            print(f"Creating placeholder image for {img_name}")
+            # Create a simple placeholder image using PIL
+            try:
+                from PIL import Image, ImageDraw, ImageFont
+                img = Image.new('RGB', (400, 500), color=(73, 109, 137))
+                d = ImageDraw.Draw(img)
+                # Try to use a default font
+                try:
+                    font = ImageFont.truetype("arial.ttf", 20)
+                except:
+                    font = ImageFont.load_default()
+                d.text((10, 10), f"Placeholder for {img_name}", fill=(255, 255, 0), font=font)
+                img.save(img_path)
+                print(f"Created placeholder image at {img_path}")
+            except Exception as e:
+                print(f"Error creating placeholder image: {str(e)}")
+
+    # Copy default images to the view_records folder
+    for img_name, img_path in default_images.items():
+        target_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], img_name)
+        if not os.path.exists(target_path) and os.path.exists(img_path):
+            print(f"Copying default image {img_name} to {target_path}")
+            try:
+                import shutil
+                shutil.copy2(img_path, target_path)
+                print(f"Copied {img_path} to {target_path}")
+            except Exception as e:
+                print(f"Error copying image: {str(e)}")
+                # If copy fails, try to create a new file
+                try:
+                    with open(img_path, 'rb') as src, open(target_path, 'wb') as dst:
+                        dst.write(src.read())
+                    print(f"Created {target_path} by reading and writing")
+                except Exception as e2:
+                    print(f"Error creating image file: {str(e2)}")
+
 def init_criminal_sightings_storage():
     """Initialize criminal sightings CSV file with headers if it doesn't exist"""
     if not os.path.exists(CRIMINAL_SIGHTINGS_FILE):
@@ -866,11 +919,32 @@ def serve_proof(filename):
 def serve_view_record(filename):
     print(f"Serving view record image: {filename}")
     file_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], filename)
+
+    # Check if the file exists in the view_records folder
     if os.path.exists(file_path):
-        print(f"File exists: {file_path}")
-    else:
-        print(f"File does not exist: {file_path}")
-    return send_from_directory(app.config['VIEW_RECORDS_FOLDER'], filename)
+        print(f"File exists in view_records: {file_path}")
+        return send_from_directory(app.config['VIEW_RECORDS_FOLDER'], filename)
+
+    # If not, check if it exists in the static/default_criminals folder
+    static_path = os.path.join('static/default_criminals', filename)
+    if os.path.exists(static_path):
+        print(f"File exists in static/default_criminals: {static_path}")
+
+        # Try to copy the file to the view_records folder
+        try:
+            import shutil
+            os.makedirs(app.config['VIEW_RECORDS_FOLDER'], exist_ok=True)
+            shutil.copy2(static_path, file_path)
+            print(f"Copied {static_path} to {file_path}")
+        except Exception as e:
+            print(f"Error copying file: {str(e)}")
+
+        # Serve from the static folder
+        return send_from_directory('static/default_criminals', filename)
+
+    # If the file doesn't exist in either location, return a default image
+    print(f"File does not exist in any location: {filename}")
+    return send_from_directory('static', 'default_image.png')
 
 @app.route('/uploads/evidence/<filename>')
 def serve_evidence(filename):
