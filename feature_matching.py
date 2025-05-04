@@ -1,6 +1,7 @@
 import os
 import re
 import random
+import time
 
 def extract_id_from_filename(filename):
     # Extract numeric ID from filename (e.g., "123.jpg" -> "123")
@@ -14,7 +15,18 @@ def find_best_matches(query_image_path, criminal_folder='static/dataset/photos',
     Simplified version that returns random matches for deployment
     In a production environment, this would use facial recognition
     """
-    print(f"Processing query image: {query_image_path}")
+    print(f"\n===== MATCHING PROCESS STARTED =====")
+    print(f"Query image: {query_image_path}")
+    start_time = time.time()
+
+    print("\n[1/4] Processing query image...")
+    print(f"Processing image: {query_image_path}")
+    # Simulate processing time
+    time.sleep(1)
+    print(f"✓ Query processing completed in {time.time() - start_time:.2f} seconds")
+
+    print("\n[2/4] Loading criminal database...")
+    db_start_time = time.time()
 
     # Get list of available criminal images
     available_images = []
@@ -27,23 +39,40 @@ def find_best_matches(query_image_path, criminal_folder='static/dataset/photos',
         print("No criminal images found, using dummy data")
         available_images = [f"{i}.jpg" for i in range(1, 10)]
 
+    print(f"Found {len(available_images)} criminal images")
+    time.sleep(1)  # Simulate processing time
+    print(f"✓ Database loading completed in {time.time() - db_start_time:.2f} seconds")
+
+    print(f"\n[3/4] Comparing query with criminals...")
+    compare_start_time = time.time()
+
     # Select random images as matches
     num_matches = min(top_k, len(available_images))
     selected_images = random.sample(available_images, num_matches)
 
     # Create result in same format as original function
-    matches = []
+    similarities = []
     for filename in selected_images:
         criminal_id = extract_id_from_filename(filename)
         # Random similarity score between 0.7 and 0.95
         similarity = random.uniform(0.7, 0.95)
-        matches.append((filename, similarity, criminal_id))
+        similarities.append((filename, similarity, criminal_id))
 
+    time.sleep(1)  # Simulate processing time
+    print(f"✓ Comparison completed in {time.time() - compare_start_time:.2f} seconds")
+
+    print("\n[4/4] Sorting results...")
     # Sort by similarity (highest first)
-    matches.sort(key=lambda x: x[1], reverse=True)
+    similarities.sort(key=lambda x: x[1], reverse=True)
+    top_matches = similarities[:top_k]
 
-    print(f"Found {len(matches)} potential matches")
-    for i, (filename, similarity, criminal_id) in enumerate(matches):
-        print(f"Match #{i+1}: Criminal ID {criminal_id} (Filename: {filename})")
+    print(f"\n===== MATCHING PROCESS COMPLETED =====")
+    print(f"Found {len(top_matches)} potential matches")
+    print("\nTOP MATCHES:")
+    for i, (filename, similarity, criminal_id) in enumerate(top_matches):
+        print(f"Match #{i+1}: Criminal ID {criminal_id} (Filename: {filename}, Similarity: {similarity:.4f})")
 
-    return matches
+    total_time = time.time() - start_time
+    print(f"\nTotal processing time: {total_time:.2f} seconds")
+
+    return top_matches
