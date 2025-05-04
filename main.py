@@ -112,6 +112,10 @@ def backup_all_criminal_images():
     # Create the static/default_criminals directory if it doesn't exist
     os.makedirs('static/default_criminals', exist_ok=True)
 
+    total_backed_up = 0
+    total_already_backed_up = 0
+    total_not_found = 0
+
     # Get all image filenames from criminal_reports.csv
     if os.path.exists(CRIMINAL_REPORTS_FILE):
         try:
@@ -121,6 +125,10 @@ def backup_all_criminal_images():
                 print(f"Found {len(image_filenames)} unique image filenames in criminal_reports.csv")
 
                 # Backup each image
+                backed_up_count = 0
+                already_backed_up_count = 0
+                not_found_count = 0
+
                 for filename in image_filenames:
                     if filename and str(filename) != 'nan':
                         source_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], filename)
@@ -131,13 +139,18 @@ def backup_all_criminal_images():
                             try:
                                 import shutil
                                 shutil.copy2(source_path, target_path)
-                                print(f"Backed up {filename} to static/default_criminals")
+                                backed_up_count += 1
                             except Exception as e:
                                 print(f"Error backing up {filename}: {str(e)}")
                         elif os.path.exists(target_path):
-                            print(f"Image {filename} already backed up")
+                            already_backed_up_count += 1
                         else:
-                            print(f"Image {filename} not found in view_records folder")
+                            not_found_count += 1
+
+                print(f"Criminal reports: Backed up {backed_up_count} new images, {already_backed_up_count} already backed up, {not_found_count} not found")
+                total_backed_up += backed_up_count
+                total_already_backed_up += already_backed_up_count
+                total_not_found += not_found_count
             else:
                 print("No sketch_filename column found in criminal_reports.csv")
         except Exception as e:
@@ -154,6 +167,10 @@ def backup_all_criminal_images():
                 print(f"Found {len(image_filenames)} unique image filenames in wanted_criminals.csv")
 
                 # Backup each image
+                backed_up_count = 0
+                already_backed_up_count = 0
+                not_found_count = 0
+
                 for filename in image_filenames:
                     if filename and str(filename) != 'nan':
                         source_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], filename)
@@ -164,13 +181,18 @@ def backup_all_criminal_images():
                             try:
                                 import shutil
                                 shutil.copy2(source_path, target_path)
-                                print(f"Backed up {filename} to static/default_criminals")
+                                backed_up_count += 1
                             except Exception as e:
                                 print(f"Error backing up {filename}: {str(e)}")
                         elif os.path.exists(target_path):
-                            print(f"Image {filename} already backed up")
+                            already_backed_up_count += 1
                         else:
-                            print(f"Image {filename} not found in view_records folder")
+                            not_found_count += 1
+
+                print(f"Wanted criminals: Backed up {backed_up_count} new images, {already_backed_up_count} already backed up, {not_found_count} not found")
+                total_backed_up += backed_up_count
+                total_already_backed_up += already_backed_up_count
+                total_not_found += not_found_count
             else:
                 print("No image_filename column found in wanted_criminals.csv")
         except Exception as e:
@@ -178,7 +200,7 @@ def backup_all_criminal_images():
     else:
         print(f"Wanted criminals file {WANTED_CRIMINALS_FILE} does not exist")
 
-    print("Finished backup of all criminal images")
+    print(f"Backup complete: {total_backed_up} new images backed up, {total_already_backed_up} already backed up, {total_not_found} not found")
 
 def init_wanted_criminals_storage():
     """Initialize wanted criminals CSV file with headers if it doesn't exist"""
