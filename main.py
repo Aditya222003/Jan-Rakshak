@@ -105,6 +105,81 @@ def init_pending_reports_storage():
     if not os.path.exists(PENDING_REPORTS_FILE):
         write_csv(PENDING_REPORTS_FILE, ['token', 'sketch_filename', 'first_name', 'last_name', 'age', 'crime', 'arrested', 'proof_filename', 'status', 'submitted_by'])
 
+def backup_all_criminal_images():
+    """Backup all criminal images to static/default_criminals directory"""
+    print("Starting backup of all criminal images...")
+
+    # Create the static/default_criminals directory if it doesn't exist
+    os.makedirs('static/default_criminals', exist_ok=True)
+
+    # Get all image filenames from criminal_reports.csv
+    if os.path.exists(CRIMINAL_REPORTS_FILE):
+        try:
+            df = pd.read_csv(CRIMINAL_REPORTS_FILE)
+            if 'sketch_filename' in df.columns:
+                image_filenames = df['sketch_filename'].dropna().unique().tolist()
+                print(f"Found {len(image_filenames)} unique image filenames in criminal_reports.csv")
+
+                # Backup each image
+                for filename in image_filenames:
+                    if filename and str(filename) != 'nan':
+                        source_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], filename)
+                        target_path = os.path.join('static/default_criminals', filename)
+
+                        # If the image exists in the view_records folder, copy it to static/default_criminals
+                        if os.path.exists(source_path) and not os.path.exists(target_path):
+                            try:
+                                import shutil
+                                shutil.copy2(source_path, target_path)
+                                print(f"Backed up {filename} to static/default_criminals")
+                            except Exception as e:
+                                print(f"Error backing up {filename}: {str(e)}")
+                        elif os.path.exists(target_path):
+                            print(f"Image {filename} already backed up")
+                        else:
+                            print(f"Image {filename} not found in view_records folder")
+            else:
+                print("No sketch_filename column found in criminal_reports.csv")
+        except Exception as e:
+            print(f"Error reading criminal_reports.csv: {str(e)}")
+    else:
+        print(f"Criminal reports file {CRIMINAL_REPORTS_FILE} does not exist")
+
+    # Get all image filenames from wanted_criminals.csv
+    if os.path.exists(WANTED_CRIMINALS_FILE):
+        try:
+            df = pd.read_csv(WANTED_CRIMINALS_FILE)
+            if 'image_filename' in df.columns:
+                image_filenames = df['image_filename'].dropna().unique().tolist()
+                print(f"Found {len(image_filenames)} unique image filenames in wanted_criminals.csv")
+
+                # Backup each image
+                for filename in image_filenames:
+                    if filename and str(filename) != 'nan':
+                        source_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], filename)
+                        target_path = os.path.join('static/default_criminals', filename)
+
+                        # If the image exists in the view_records folder, copy it to static/default_criminals
+                        if os.path.exists(source_path) and not os.path.exists(target_path):
+                            try:
+                                import shutil
+                                shutil.copy2(source_path, target_path)
+                                print(f"Backed up {filename} to static/default_criminals")
+                            except Exception as e:
+                                print(f"Error backing up {filename}: {str(e)}")
+                        elif os.path.exists(target_path):
+                            print(f"Image {filename} already backed up")
+                        else:
+                            print(f"Image {filename} not found in view_records folder")
+            else:
+                print("No image_filename column found in wanted_criminals.csv")
+        except Exception as e:
+            print(f"Error reading wanted_criminals.csv: {str(e)}")
+    else:
+        print(f"Wanted criminals file {WANTED_CRIMINALS_FILE} does not exist")
+
+    print("Finished backup of all criminal images")
+
 def init_wanted_criminals_storage():
     """Initialize wanted criminals CSV file with headers if it doesn't exist"""
     if not os.path.exists(WANTED_CRIMINALS_FILE) or os.path.getsize(WANTED_CRIMINALS_FILE) == 0:
@@ -172,6 +247,9 @@ def init_wanted_criminals_storage():
                     print(f"Created {target_path} by reading and writing")
                 except Exception as e2:
                     print(f"Error creating image file: {str(e2)}")
+
+    # Backup all criminal images
+    backup_all_criminal_images()
 
 def init_criminal_sightings_storage():
     """Initialize criminal sightings CSV file with headers if it doesn't exist"""
@@ -909,11 +987,65 @@ def reject_criminal(token):
 # Routes to serve uploaded files
 @app.route('/uploads/sketches/<filename>')
 def serve_sketch(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    print(f"Serving sketch image: {filename}")
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    # Check if the file exists in the upload folder
+    if os.path.exists(file_path):
+        print(f"File exists in upload folder: {file_path}")
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+    # If not, check if it exists in the static/default_criminals folder
+    static_path = os.path.join('static/default_criminals', filename)
+    if os.path.exists(static_path):
+        print(f"File exists in static/default_criminals: {static_path}")
+
+        # Try to copy the file to the upload folder
+        try:
+            import shutil
+            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+            shutil.copy2(static_path, file_path)
+            print(f"Copied {static_path} to {file_path}")
+        except Exception as e:
+            print(f"Error copying file: {str(e)}")
+
+        # Serve from the static folder
+        return send_from_directory('static/default_criminals', filename)
+
+    # If the file doesn't exist in either location, return a default image
+    print(f"File does not exist in any location: {filename}")
+    return send_from_directory('static', 'default_image.png')
 
 @app.route('/uploads/proofs/<filename>')
 def serve_proof(filename):
-    return send_from_directory(app.config['PROOF_FOLDER'], filename)
+    print(f"Serving proof image: {filename}")
+    file_path = os.path.join(app.config['PROOF_FOLDER'], filename)
+
+    # Check if the file exists in the proof folder
+    if os.path.exists(file_path):
+        print(f"File exists in proof folder: {file_path}")
+        return send_from_directory(app.config['PROOF_FOLDER'], filename)
+
+    # If not, check if it exists in the static/default_criminals folder
+    static_path = os.path.join('static/default_criminals', filename)
+    if os.path.exists(static_path):
+        print(f"File exists in static/default_criminals: {static_path}")
+
+        # Try to copy the file to the proof folder
+        try:
+            import shutil
+            os.makedirs(app.config['PROOF_FOLDER'], exist_ok=True)
+            shutil.copy2(static_path, file_path)
+            print(f"Copied {static_path} to {file_path}")
+        except Exception as e:
+            print(f"Error copying file: {str(e)}")
+
+        # Serve from the static folder
+        return send_from_directory('static/default_criminals', filename)
+
+    # If the file doesn't exist in either location, return a default image
+    print(f"File does not exist in any location: {filename}")
+    return send_from_directory('static', 'default_image.png')
 
 @app.route('/uploads/view_records/<filename>')
 def serve_view_record(filename):
@@ -948,7 +1080,34 @@ def serve_view_record(filename):
 
 @app.route('/uploads/evidence/<filename>')
 def serve_evidence(filename):
-    return send_from_directory(app.config['EVIDENCE_FOLDER'], filename)
+    print(f"Serving evidence image: {filename}")
+    file_path = os.path.join(app.config['EVIDENCE_FOLDER'], filename)
+
+    # Check if the file exists in the evidence folder
+    if os.path.exists(file_path):
+        print(f"File exists in evidence folder: {file_path}")
+        return send_from_directory(app.config['EVIDENCE_FOLDER'], filename)
+
+    # If not, check if it exists in the static/default_criminals folder
+    static_path = os.path.join('static/default_criminals', filename)
+    if os.path.exists(static_path):
+        print(f"File exists in static/default_criminals: {static_path}")
+
+        # Try to copy the file to the evidence folder
+        try:
+            import shutil
+            os.makedirs(app.config['EVIDENCE_FOLDER'], exist_ok=True)
+            shutil.copy2(static_path, file_path)
+            print(f"Copied {static_path} to {file_path}")
+        except Exception as e:
+            print(f"Error copying file: {str(e)}")
+
+        # Serve from the static folder
+        return send_from_directory('static/default_criminals', filename)
+
+    # If the file doesn't exist in either location, return a default image
+    print(f"File does not exist in any location: {filename}")
+    return send_from_directory('static', 'default_image.png')
 
 @app.route('/debug/images')
 def debug_images():
