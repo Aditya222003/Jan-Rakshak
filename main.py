@@ -4,6 +4,7 @@ import os
 import uuid
 import datetime
 import csv
+import pandas as pd
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_mail import Mail, Message
@@ -106,8 +107,18 @@ def init_pending_reports_storage():
 
 def init_wanted_criminals_storage():
     """Initialize wanted criminals CSV file with headers if it doesn't exist"""
-    if not os.path.exists(WANTED_CRIMINALS_FILE):
-        write_csv(WANTED_CRIMINALS_FILE, ['id', 'name', 'image_filename', 'description', 'status'])
+    if not os.path.exists(WANTED_CRIMINALS_FILE) or os.path.getsize(WANTED_CRIMINALS_FILE) == 0:
+        print(f"Creating new wanted_criminals.csv file with headers")
+        # Add some default wanted criminals for testing
+        default_criminals = [
+            [5, 'Tracy Cobb', '124.jpg', 'Wanted for Arson, Shoplifting, and Counterfeiting in Gilbert and New Orleans. Considered dangerous and may be armed.', 'active'],
+            [6, 'Joshua Huang', '196.jpg', 'Wanted for Domestic Violence in Tampa and Raleigh. Has a history of violent behavior and should be approached with caution.', 'active'],
+            [7, 'Alex Parrish', '67.jpg', 'Wanted for Kidnapping and Vandalism in Reno. Known to target vulnerable individuals and has evaded capture multiple times.', 'active'],
+            [8, 'William Chen', '77.jpg', 'Wanted for Arson, Homicide, and Car Theft in Miami. Extremely dangerous and has a history of violent crimes.', 'active'],
+            [9, 'Jasmine Smith', '73.jpg', 'Wanted for Car Theft in Delhi and Corpus Christi. Known to operate in multiple cities and may be part of an organized crime ring.', 'active']
+        ]
+        write_csv(WANTED_CRIMINALS_FILE, ['id', 'name', 'image_filename', 'description', 'status'], default_criminals)
+        print(f"Created wanted_criminals.csv with {len(default_criminals)} default criminals")
 
 def init_criminal_sightings_storage():
     """Initialize criminal sightings CSV file with headers if it doesn't exist"""
@@ -601,18 +612,32 @@ def wanted_criminals():
 
     try:
         # Read wanted criminals from CSV
+        print(f"Reading wanted criminals from {WANTED_CRIMINALS_FILE}")
         df = pd.read_csv(WANTED_CRIMINALS_FILE)
+        print(f"Found {len(df)} criminals in CSV")
 
         if df.empty:
             criminals = []
+            print("CSV is empty, no criminals to display")
         else:
             # Filter only active criminals
             active_criminals = df[df['status'] == 'active']
             criminals = active_criminals.to_dict('records')
+            print(f"Found {len(criminals)} active criminals")
+
+            # Verify image files exist
+            for criminal in criminals:
+                image_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], criminal['image_filename'])
+                if not os.path.exists(image_path):
+                    print(f"Warning: Image file does not exist: {image_path}")
+                else:
+                    print(f"Image file exists: {image_path}")
 
         return render_template('wanted_criminals.html', criminals=criminals)
     except Exception as e:
         print(f"Error in wanted_criminals: {str(e)}")
+        import traceback
+        traceback.print_exc()
         flash('An error occurred while fetching wanted criminals.', 'danger')
         return render_template('wanted_criminals.html', criminals=[])
 
@@ -860,19 +885,56 @@ def debug_images():
         # Check if the wanted criminals images exist
         result = []
         df = pd.read_csv(WANTED_CRIMINALS_FILE)
+        print(f"DEBUG: Read {len(df)} criminals from {WANTED_CRIMINALS_FILE}")
+        print(f"DEBUG: Columns: {df.columns.tolist()}")
+        print(f"DEBUG: First row: {df.iloc[0].to_dict() if not df.empty else 'No data'}")
 
         for _, row in df.iterrows():
             image_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], row['image_filename'])
+            image_exists = os.path.exists(image_path)
+            print(f"DEBUG: Image {row['image_filename']} exists: {image_exists}, path: {image_path}")
             result.append({
                 'id': row['id'],
                 'name': row['name'],
                 'image_filename': row['image_filename'],
-                'image_exists': os.path.exists(image_path),
+                'image_exists': image_exists,
                 'image_path': image_path
             })
 
         return {'criminals': result, 'view_records_folder': app.config['VIEW_RECORDS_FOLDER']}
     except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {'error': str(e)}
+
+@app.route('/debug/wanted_criminals')
+def debug_wanted_criminals():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    try:
+        # Read wanted criminals from CSV
+        print(f"DEBUG: Reading wanted criminals from {WANTED_CRIMINALS_FILE}")
+        df = pd.read_csv(WANTED_CRIMINALS_FILE)
+        print(f"DEBUG: Found {len(df)} criminals in CSV")
+
+        # Check if the file exists and is readable
+        print(f"DEBUG: File exists: {os.path.exists(WANTED_CRIMINALS_FILE)}")
+        print(f"DEBUG: File size: {os.path.getsize(WANTED_CRIMINALS_FILE)} bytes")
+
+        # Check the content of the CSV file
+        criminals = df.to_dict('records')
+
+        # Check if images exist
+        for criminal in criminals:
+            image_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], criminal['image_filename'])
+            criminal['image_exists'] = os.path.exists(image_path)
+            criminal['image_path'] = image_path
+
+        return {'criminals': criminals, 'file_path': WANTED_CRIMINALS_FILE}
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
         return {'error': str(e)}
 
 @app.route('/add_criminal', methods=['GET', 'POST'])
@@ -1162,16 +1224,20 @@ def get_wanted_criminal(criminal_id):
         print(f"Fetching criminal with ID: {criminal_id}")
         df = pd.read_csv(WANTED_CRIMINALS_FILE)
         print(f"Wanted criminals data: {df.head()}")
+        print(f"Total criminals in CSV: {len(df)}")
+        print(f"Criminal IDs in CSV: {df['id'].tolist()}")
 
         # Convert criminal_id to int for comparison
         try:
             criminal_id_int = int(criminal_id)
+            print(f"Converted criminal_id to int: {criminal_id_int}")
         except ValueError:
             print(f"Invalid criminal ID format: {criminal_id}")
             return {"error": "Invalid criminal ID format"}, 400
 
         # Find the criminal in the dataframe
         criminal_rows = df[df['id'] == criminal_id_int]
+        print(f"Found {len(criminal_rows)} matching rows")
 
         if criminal_rows.empty:
             print(f"No criminal found with ID: {criminal_id}")
@@ -1185,6 +1251,8 @@ def get_wanted_criminal(criminal_id):
         image_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], criminal['image_filename'])
         if not os.path.exists(image_path):
             print(f"Warning: Image file does not exist: {image_path}")
+        else:
+            print(f"Image file exists: {image_path}")
 
         return criminal
     except Exception as e:
@@ -1848,17 +1916,31 @@ def manage_wanted_list():
 
     try:
         # Read wanted criminals from CSV
+        print(f"Reading wanted criminals from {WANTED_CRIMINALS_FILE} for admin")
         df = pd.read_csv(WANTED_CRIMINALS_FILE)
+        print(f"Found {len(df)} criminals in CSV for admin")
 
         if df.empty:
             criminals = []
+            print("CSV is empty, no criminals to display for admin")
         else:
             # Convert DataFrame to list of dictionaries
             criminals = df.to_dict('records')
+            print(f"Found {len(criminals)} criminals for admin")
+
+            # Verify image files exist
+            for criminal in criminals:
+                image_path = os.path.join(app.config['VIEW_RECORDS_FOLDER'], criminal['image_filename'])
+                if not os.path.exists(image_path):
+                    print(f"Warning: Image file does not exist for admin: {image_path}")
+                else:
+                    print(f"Image file exists for admin: {image_path}")
 
         return render_template('manage_wanted_list.html', criminals=criminals)
     except Exception as e:
         print(f"Error in manage_wanted_list: {str(e)}")
+        import traceback
+        traceback.print_exc()
         flash('An error occurred while fetching wanted criminals.', 'danger')
         return render_template('manage_wanted_list.html', criminals=[])
 
