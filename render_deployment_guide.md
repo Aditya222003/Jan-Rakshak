@@ -48,6 +48,8 @@ If your application uses environment variables:
 3. Add your environment variables
 4. Click "Save Changes"
 
+**Note for Jan-Rakshak**: The default start command on Render is 'gunicorn app:app' but for this project it should be changed to 'gunicorn main:app' since the Flask application is defined in main.py.
+
 ## Step 5: Set Up a Custom Domain (Optional)
 
 To use your own domain (like jan-rakshak.com):
@@ -64,3 +66,5 @@ If you encounter any issues:
 1. Check the logs in your Render dashboard
 2. Make sure all dependencies are in your requirements.txt file
 3. Ensure your application works locally before deploying
+
+**Important Note for Jan-Rakshak**: If you encounter memory issues during deployment, make sure to add 'keras_facenet' module to your requirements.txt file. This is required for the facial recognition feature to work properly.
