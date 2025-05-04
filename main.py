@@ -1,9 +1,9 @@
 from feature_matching import find_best_matches
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory
-import pandas as pd
 import os
 import uuid
 import datetime
+import csv
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_mail import Mail, Message
@@ -64,66 +64,98 @@ os.makedirs(PROOF_FOLDER, exist_ok=True)
 os.makedirs(VIEW_RECORDS_FOLDER, exist_ok=True)
 os.makedirs(EVIDENCE_FOLDER, exist_ok=True)
 
+# CSV Helper Functions
+def write_csv(file_path, headers, rows=None):
+    """Write data to a CSV file"""
+    with open(file_path, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
+        if rows:
+            for row in rows:
+                writer.writerow(row)
+
+def read_csv(file_path):
+    """Read data from a CSV file and return as a list of dictionaries"""
+    if not os.path.exists(file_path):
+        return []
+
+    with open(file_path, 'r', newline='') as f:
+        reader = csv.DictReader(f)
+        return list(reader)
+
+def append_csv(file_path, row):
+    """Append a row to a CSV file"""
+    with open(file_path, 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(row)
+
 def init_user_storage():
     """Initialize users CSV file with headers if it doesn't exist"""
     if not os.path.exists(USERS_FILE):
-        pd.DataFrame(columns=['username', 'email', 'password', 'role']).to_csv(USERS_FILE, index=False)
+        write_csv(USERS_FILE, ['username', 'email', 'password', 'role'])
 
 def init_reports_storage():
     """Initialize criminal reports CSV file with headers if it doesn't exist"""
     if not os.path.exists(CRIMINAL_REPORTS_FILE):
-        pd.DataFrame(columns=['sketch_filename', 'name', 'gender', 'age', 'crimes', 'area_of_crime']).to_csv(CRIMINAL_REPORTS_FILE, index=False)
+        write_csv(CRIMINAL_REPORTS_FILE, ['sketch_filename', 'name', 'gender', 'age', 'crimes', 'area_of_crime'])
 
 def init_pending_reports_storage():
     """Initialize pending reports CSV file with headers if it doesn't exist"""
     if not os.path.exists(PENDING_REPORTS_FILE):
-        pd.DataFrame(columns=['token', 'sketch_filename', 'first_name', 'last_name', 'age', 'crime', 'arrested', 'proof_filename', 'status', 'submitted_by']).to_csv(PENDING_REPORTS_FILE, index=False)
+        write_csv(PENDING_REPORTS_FILE, ['token', 'sketch_filename', 'first_name', 'last_name', 'age', 'crime', 'arrested', 'proof_filename', 'status', 'submitted_by'])
 
 def init_wanted_criminals_storage():
     """Initialize wanted criminals CSV file with headers if it doesn't exist"""
     if not os.path.exists(WANTED_CRIMINALS_FILE):
-        pd.DataFrame(columns=['id', 'name', 'image_filename', 'description', 'status']).to_csv(WANTED_CRIMINALS_FILE, index=False)
+        write_csv(WANTED_CRIMINALS_FILE, ['id', 'name', 'image_filename', 'description', 'status'])
 
 def init_criminal_sightings_storage():
     """Initialize criminal sightings CSV file with headers if it doesn't exist"""
     if not os.path.exists(CRIMINAL_SIGHTINGS_FILE):
-        pd.DataFrame(columns=['id', 'criminal_id', 'criminal_name', 'reported_by', 'reported_by_email', 'location', 'latitude', 'longitude', 'sighting_date', 'sighting_time', 'description', 'image_filename', 'status', 'admin_notes', 'email_sent']).to_csv(CRIMINAL_SIGHTINGS_FILE, index=False)
+        write_csv(CRIMINAL_SIGHTINGS_FILE, ['id', 'criminal_id', 'criminal_name', 'reported_by', 'reported_by_email', 'location', 'latitude', 'longitude', 'sighting_date', 'sighting_time', 'description', 'image_filename', 'status', 'admin_notes', 'email_sent'])
 
 def init_admin_codes_storage():
     """Initialize admin registration codes CSV file with headers if it doesn't exist"""
     if not os.path.exists(ADMIN_CODES_FILE):
         # Create default admin codes
-        df = pd.DataFrame([
+        default_codes = [
             ['POLICE123', 'no', '', '2025-05-02'],
             ['FBI456', 'no', '', '2025-05-02'],
             ['OFFICER789', 'no', '', '2025-05-02'],
             ['SHERIFF101', 'no', '', '2025-05-02'],
             ['AGENT202', 'no', '', '2025-05-02']
-        ], columns=['code', 'used', 'used_by', 'created_date'])
-        df.to_csv(ADMIN_CODES_FILE, index=False)
+        ]
+        write_csv(ADMIN_CODES_FILE, ['code', 'used', 'used_by', 'created_date'], default_codes)
 
 def verify_admin_code(code):
     """Verify if an admin code is valid and unused"""
     if not os.path.exists(ADMIN_CODES_FILE):
         init_admin_codes_storage()
 
-    df = pd.read_csv(ADMIN_CODES_FILE)
-    code_row = df[(df['code'] == code) & (df['used'] == 'no')]
-
-    return not code_row.empty
+    admin_codes = read_csv(ADMIN_CODES_FILE)
+    for admin_code in admin_codes:
+        if admin_code['code'] == code and admin_code['used'] == 'no':
+            return True
+    return False
 
 def mark_admin_code_used(code, username):
     """Mark an admin code as used by a specific user"""
     if not os.path.exists(ADMIN_CODES_FILE):
         init_admin_codes_storage()
 
-    df = pd.read_csv(ADMIN_CODES_FILE)
-    code_idx = df[df['code'] == code].index
+    admin_codes = read_csv(ADMIN_CODES_FILE)
+    updated_codes = []
+    found = False
 
-    if len(code_idx) > 0:
-        df.at[code_idx[0], 'used'] = 'yes'
-        df.at[code_idx[0], 'used_by'] = username
-        df.to_csv(ADMIN_CODES_FILE, index=False)
+    for admin_code in admin_codes:
+        if admin_code['code'] == code:
+            admin_code['used'] = 'yes'
+            admin_code['used_by'] = username
+            found = True
+        updated_codes.append(list(admin_code.values()))
+
+    if found:
+        write_csv(ADMIN_CODES_FILE, ['code', 'used', 'used_by', 'created_date'], updated_codes)
         return True
 
     return False
@@ -198,20 +230,26 @@ def send_email(to, subject, template, **kwargs):
 
 def register_user(username, email, password, role):
     """Register a new user with hashed password and additional details"""
-    df = pd.read_csv(USERS_FILE)
-    if username in df['username'].values:
-        return False
+    users = read_csv(USERS_FILE)
+
+    # Check if username already exists
+    for user in users:
+        if user['username'] == username:
+            return False
+
+    # Add new user
     hashed_pw = generate_password_hash(password)
-    new_user = pd.DataFrame([[username, email, hashed_pw, role]], columns=['username', 'email', 'password', 'role'])
-    pd.concat([df, new_user], ignore_index=True).to_csv(USERS_FILE, index=False)
+    append_csv(USERS_FILE, [username, email, hashed_pw, role])
     return True
 
 def verify_user(username, password):
     """Verify user credentials"""
-    df = pd.read_csv(USERS_FILE)
-    user = df[df['username'] == username]
-    if not user.empty:
-        return check_password_hash(user.iloc[0]['password'], password)
+    users = read_csv(USERS_FILE)
+
+    for user in users:
+        if user['username'] == username:
+            return check_password_hash(user['password'], password)
+
     return False
 
 def search_criminal_history(search_term, search_type='id'):
@@ -311,21 +349,22 @@ def login():
 
         if verify_user(username, password):
             session['username'] = username
-            df = pd.read_csv(USERS_FILE)
-            user_row = df[df['username'] == username]
-            if not user_row.empty and 'role' in user_row.columns:
-                user_role = user_row['role'].values[0]
-                session['role'] = user_role
 
-                print(f"User {username} logged in with role: {user_role}")  # Debug log
+            # Get user role from CSV
+            users = read_csv(USERS_FILE)
+            user_role = 'user'  # Default role
 
-                if user_role == 'official':
-                    return redirect(url_for('admin_dashboard'))
-                else:
-                    return redirect(url_for('user_dashboard'))
+            for user in users:
+                if user['username'] == username:
+                    user_role = user['role']
+                    break
+
+            session['role'] = user_role
+            print(f"User {username} logged in with role: {user_role}")  # Debug log
+
+            if user_role == 'official':
+                return redirect(url_for('admin_dashboard'))
             else:
-                # If role is not in database, default to user
-                session['role'] = 'user'
                 return redirect(url_for('user_dashboard'))
         else:
             return render_template('login.html', error="Invalid credentials!")
@@ -386,22 +425,30 @@ def user_dashboard():
     try:
         # Get user's criminal reports
         if os.path.exists(PENDING_REPORTS_FILE):
-            reports_df = pd.read_csv(PENDING_REPORTS_FILE)
-            user_reports = reports_df[reports_df['submitted_by'] == username]
-            if not user_reports.empty:
-                # Add date_submitted field if it doesn't exist
-                if 'date_submitted' not in user_reports.columns:
-                    user_reports['date_submitted'] = 'Unknown'
-                criminal_reports = user_reports.to_dict('records')
-                approved_reports = len(user_reports[user_reports['status'] == 'approved'])
+            reports = read_csv(PENDING_REPORTS_FILE)
+            user_reports = []
+            for report in reports:
+                if report.get('submitted_by') == username:
+                    # Add date_submitted field if it doesn't exist
+                    if 'date_submitted' not in report:
+                        report['date_submitted'] = 'Unknown'
+                    user_reports.append(report)
+                    if report.get('status') == 'approved':
+                        approved_reports += 1
+
+            criminal_reports = user_reports
 
         # Get user's criminal sightings
         if os.path.exists(CRIMINAL_SIGHTINGS_FILE):
-            sightings_df = pd.read_csv(CRIMINAL_SIGHTINGS_FILE)
-            user_sightings = sightings_df[sightings_df['reported_by'] == username]
-            if not user_sightings.empty:
-                criminal_sightings = user_sightings.to_dict('records')
-                verified_sightings = len(user_sightings[user_sightings['status'] == 'verified'])
+            sightings = read_csv(CRIMINAL_SIGHTINGS_FILE)
+            user_sightings = []
+            for sighting in sightings:
+                if sighting.get('reported_by') == username:
+                    user_sightings.append(sighting)
+                    if sighting.get('status') == 'verified':
+                        verified_sightings += 1
+
+            criminal_sightings = user_sightings
 
     except Exception as e:
         print(f"Error fetching user activity: {str(e)}")
@@ -896,34 +943,24 @@ def view_records():
 
     try:
         # Read criminal records from CSV
-        df = pd.read_csv(CRIMINAL_REPORTS_FILE)
+        criminals = read_csv(CRIMINAL_REPORTS_FILE)
 
-        if df.empty:
-            criminals = []
-        else:
-            # Remove rows with all NaN values
-            df = df.dropna(how='all')
-
+        # Process the criminals data
+        for i, criminal in enumerate(criminals):
             # Convert age to integer if it's a valid number
-            df['age'] = pd.to_numeric(df['age'], errors='coerce').fillna(0).astype(int)
+            try:
+                criminal['age'] = int(criminal.get('age', 0) or 0)
+            except (ValueError, TypeError):
+                criminal['age'] = 0
 
             # Extract ID from filename (e.g., "123.jpg" -> "123")
-            def extract_id(filename):
-                if pd.isna(filename):
-                    return ""
+            filename = criminal.get('sketch_filename', '')
+            if filename:
                 import re
                 match = re.search(r'(\d+)', filename)
-                if match:
-                    return match.group(1)
-                return ""
-
-            # Add an ID column based on the filename
-            df['id'] = df['sketch_filename'].apply(extract_id)
-
-            # For any missing IDs, use the index
-            df.loc[df['id'] == "", 'id'] = df.index[df['id'] == ""].astype(str)
-
-            criminals = df.to_dict('records')
+                criminal['id'] = match.group(1) if match else str(i)
+            else:
+                criminal['id'] = str(i)
 
         return render_template('view_records.html', criminals=criminals)
     except Exception as e:
@@ -937,10 +974,18 @@ def get_criminal(criminal_id):
         return redirect(url_for('login'))
 
     try:
-        df = pd.read_csv(CRIMINAL_REPORTS_FILE)
-        df['id'] = df.index.astype(str)
-        criminal = df[df['id'] == criminal_id].to_dict('records')[0]
-        return criminal
+        criminals = read_csv(CRIMINAL_REPORTS_FILE)
+
+        # Process criminals to add IDs
+        for i, criminal in enumerate(criminals):
+            criminal['id'] = str(i)
+
+        # Find the criminal with the matching ID
+        for criminal in criminals:
+            if criminal['id'] == criminal_id:
+                return criminal
+
+        return {"error": "Criminal not found"}, 404
     except Exception as e:
         print(f"Error in get_criminal: {str(e)}")
         return {"error": "Criminal not found"}, 404
