@@ -23,7 +23,7 @@ Jan-Rakshak is a web-based platform designed to help law enforcement agencies an
 
 1. Clone the repository:
    ```
-   git clone https://github.com/YOUR-USERNAME/Jan-Rakshak.git
+   git clone https://github.com/Aditya222003/Jan-Rakshak.git
    cd Jan-Rakshak
    ```
 
@@ -58,5 +58,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 [Add license information here]
 
 ## Contact
-
-[Add contact information here]
+email : rauladitya22@gmail.com
